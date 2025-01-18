@@ -1,6 +1,8 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import userRouter from './routes/user.routes.js';
+
 dotenv.config();
 const uri = process.env.MONGOURL;
 
@@ -25,3 +27,4 @@ app.listen(3000, () => {
     console.log('====================================');
 });
 
+app.use('/api/user', userRouter)
