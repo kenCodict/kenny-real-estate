@@ -53,15 +53,15 @@ try {
  console.log('====================================');
  console.log(error);
  console.log('===================================='); 
- setError(error.message)
+ setError(error.response.data.message)
  setLoading(false)
 }
 
   }
   return (
-    <section className='px-6'>
+    <section className='px-6 max-w-xl mx-auto'>
 <h1 className="text-3xl text-center font-black my-7 ">Sign Up</h1>
-<form className="flex flex-col max-w-xl mx-auto  gap-5" onSubmit={submit}>
+<form className="flex flex-col   gap-5" onSubmit={submit}>
   <input type="text" className="border rounded-lg p-3" id="name" value={data.name} name='name' onChange={handleChange}  placeholder="Full Name"/>
   <input type="email" className="border rounded-lg p-3" id="email" value={data.email} name='email' onChange={handleChange} placeholder="Email Address" />
   <input type="username" className="border rounded-lg p-3" id="username" value={data.username} name='username' onChange={handleChange} placeholder="Username" />
