@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import userRouter from './routes/user.routes.js';
+import authRouter from './routes/auth.route.js';
 
 dotenv.config();
 const uri = process.env.MONGOURL;
@@ -14,13 +15,18 @@ async function run() {
       await mongoose.connect(uri, clientOptions);
       await mongoose.connection.db.admin().command({ ping: 1 });
       console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-      // Ensures that the client will close when you finish/error
-      await mongoose.disconnect();
     }
+    catch{
+      
+    } 
+    // finally {
+    //   // Ensures that the client will close when you finish/error
+    //   await mongoose.disconnect();
+    // }
   }
   run().catch(console.dir);
 const app = express();
+app.use(express.json())
 app.listen(3000, () => {
     console.log('====================================');
     console.log("Server is running on port 3000 !!!!");
@@ -28,3 +34,5 @@ app.listen(3000, () => {
 });
 
 app.use('/api/user', userRouter)
+app.use('/api/auth', authRouter)
+
