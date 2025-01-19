@@ -4,23 +4,30 @@ import axios from 'axios'
 import Loader from "../Components/Loader"
 import ErrorModal from "../Components/ErrorModal"
 import SuccessModal from "../Components/SuccessModal"
+import { useDispatch,useSelector } from "react-redux";
+import {  sigInState ,signInSuccess ,signInFailure} from "../redux/features/user/userSlice";
 
 const SignIn = () => {
   const [data, setData] = useState({
     password:"",
     email:"",
   })
+
+  
+  const {error, loading} = useSelector(state => state.persistedReducer.user)
   const navigate = useNavigate();
-  const [error, setError] = useState('')
+
   const [success, setSuccess] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [errorCustom, setErrorCustom] = useState('')
+
   const handleChange =  (e) => {
     setData({...data, [e.target.name]:e.target.value})
   }
+  const dispatch = useDispatch()
   const submit = async (e) => {
 e.preventDefault()
-setLoading(true)
-
+// setLoading(true)
+dispatch(sigInState())
 try {
   const res = await axios.post('/api/auth/signin',JSON.stringify(data), {
     headers: {
@@ -29,13 +36,11 @@ try {
   })
   const dat = await res.data
   if (dat.success  === false) {
-    setError(dat.message)
-    setLoading(false)
+    dispatch(signInFailure(dat.message))
   }else {
+    dispatch(signInSuccess(dat.data))
     setSuccess(dat.message)
-    setLoading(false)
     setData({
-     
       password:"",
       email:"",
      
@@ -47,8 +52,9 @@ try {
  console.log('====================================');
  console.log(error);
  console.log('====================================');
- setError(error.response.data.message)
- setLoading(false)
+ setErrorCustom(error.response.data.message)
+ dispatch(signInFailure(error.response.data.message))
+
 }
 
   }
@@ -72,7 +78,7 @@ try {
 }
 
 {
-  error && <ErrorModal setError={setError} error={error} />
+  errorCustom && <ErrorModal setError={errorCustom} error={errorCustom} />
 }
 {
   success && <SuccessModal setSuccess={setSuccess} success={success} />
