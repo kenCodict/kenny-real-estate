@@ -4,6 +4,7 @@ import axios from 'axios'
 import Loader from "../Components/Loader"
 import ErrorModal from "../Components/ErrorModal"
 import SuccessModal from "../Components/SuccessModal"
+import OAuth from "../Components/OAuth"
 
 const SignUp = () => {
   const [data, setData] = useState({
@@ -67,6 +68,7 @@ try {
   <input type="username" className="border rounded-lg p-3" id="username" value={data.username} name='username' onChange={handleChange} placeholder="Username" />
   <input type="password" className="border rounded-lg p-3" id="email" value={data.password} name='password' onChange={handleChange}  placeholder="Password"/>
   <button disabled={loading} className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80 p-2" type="submit">Sign Up</button>
+  <OAuth setError={setError} error={error} setSuccess={setSuccess} />
 </form>
 <div className="flex gap-2 mb-5 my-5 ">
   <p className="">Have an Account?</p>

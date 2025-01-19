@@ -6,6 +6,7 @@ import ErrorModal from "../Components/ErrorModal"
 import SuccessModal from "../Components/SuccessModal"
 import { useDispatch,useSelector } from "react-redux";
 import {  sigInState ,signInSuccess ,signInFailure} from "../redux/features/user/userSlice";
+import OAuth from "../Components/OAuth"
 
 const SignIn = () => {
   const [data, setData] = useState({
@@ -67,6 +68,7 @@ try {
  
   <input type="password" className="border rounded-lg p-3" id="email" value={data.password} name='password' onChange={handleChange}  placeholder="Password"/>
   <button disabled={loading} className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80 p-2" type="submit">Sign In</button>
+  <OAuth setError={setErrorCustom} error={errorCustom} setSuccess={setSuccess} />
 </form>
 <div className="flex gap-2 mb-5 my-5 ">
   <p className="">Do Not Have an Account?</p>
@@ -78,7 +80,7 @@ try {
 }
 
 {
-  errorCustom && <ErrorModal setError={errorCustom} error={errorCustom} />
+  errorCustom && <ErrorModal setError={setErrorCustom} error={errorCustom} />
 }
 {
   success && <SuccessModal setSuccess={setSuccess} success={success} />
