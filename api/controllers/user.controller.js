@@ -57,9 +57,9 @@ export const deleteUser = async (req, res, next) => {
  
 
    
-
+res.clearCookie('access_token');
     // Send the response with the updated user details (excluding password)
-    res.status(200).json(successHandler(200, "Profile updated successfully"));
+    res.status(200).json(successHandler(200, "Profile updated successfully"))
   } catch (error) {
     next(error); // Pass errors to the error handler
   }
