@@ -6,6 +6,8 @@ import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Header from "./Components/Header";
 import PrivateRoute from "./Components/PrivateRoute";
+import Upload from "./Components/Upload";
+import SecureUpload from "./Components/SecureUpload";
 
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/upload" element={<Upload />} />
+      <Route path="/secureupload" element={<SecureUpload />} />
       <Route element={<PrivateRoute />}>
 
       <Route path="/profile" element={<Profile />} />
