@@ -1,15 +1,15 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../Components/Loader'
 import ErrorModal from '../Components/ErrorModal'
 import SuccessModal from '../Components/SuccessModal'
-
+import {updateUserStart,updateUserSuccess ,UpdateFailure} from '../redux/features/user/userSlice'
 const Profile = () => {
   const { currentUser } = useSelector(state => state.persistedReducer.user)
   const [data, setData] = useState({
     name: currentUser.name,
-    password: '',
+    password: null,
     email: currentUser.email,
     username: currentUser.username,
     avatar: currentUser.avatar,
@@ -67,32 +67,32 @@ const Profile = () => {
       console.error('Upload failed:', error)
     }
   }
+const dispatch = useDispatch();
 
   const submit = async (e) => {
     e.preventDefault()
     setLoading(true)
     try {
-      const res = await axios.post('/api/auth/signup', JSON.stringify(data), {
+      const res = await axios.patch(`/api/user/update/${currentUser._id}`, JSON.stringify(data), {
         headers: {
           'Content-Type': 'application/json'
         }
       })
       const dat = res.data
       if (dat.success === false) {
+        dispatch(UpdateFailure(dat.message))
         setError(dat.message)
         setLoading(false)
       } else {
+        
         setSuccess(dat.message)
+        dispatch(updateUserSuccess(dat.data))
         setLoading(false)
-        setData({
-          name: "",
-          password: "",
-          email: "",
-          username: "",
-        })
+        
       }
     } catch (error) {
       console.log(error)
+      dispatch(UpdateFailure(error.response?.data?.message || 'Something went wrong'))
       setError(error.response?.data?.message || 'Something went wrong')
       setLoading(false)
     }
