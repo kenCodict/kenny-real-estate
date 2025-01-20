@@ -36,10 +36,20 @@ export const userSlice = createSlice({
     state.loading = false
     state.error = action.payload
 },
+deleteUserSuccess: (state) => {
+      state.loading = false
+      state.currentUser = null
+      state.error = null
+  },
+  deleteFailure: (state, action) => {
+    // state.currentUser = action.payload
+    state.loading = false
+    state.error = action.payload
+},
   },
 })
 
 // Action creators are generated for each case reducer function
-export const {sigInState ,signInSuccess ,signInFailure, updateUserStart,updateUserSuccess ,UpdateFailure} = userSlice.actions
+export const {sigInState ,signInSuccess ,signInFailure, updateUserStart,updateUserSuccess ,UpdateFailure,deleteUserSuccess,deleteFailure} = userSlice.actions
 
 export default userSlice.reducer

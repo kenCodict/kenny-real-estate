@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../Components/Loader'
 import ErrorModal from '../Components/ErrorModal'
 import SuccessModal from '../Components/SuccessModal'
-import {updateUserStart,updateUserSuccess ,UpdateFailure} from '../redux/features/user/userSlice'
+import {updateUserStart,updateUserSuccess ,UpdateFailure, deleteUserSuccess,deleteFailure} from '../redux/features/user/userSlice'
 const Profile = () => {
   const { currentUser } = useSelector(state => state.persistedReducer.user)
   const [data, setData] = useState({
@@ -68,7 +68,7 @@ const Profile = () => {
     }
   }
 const dispatch = useDispatch();
-
+// Update profile
   const submit = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -93,6 +93,36 @@ const dispatch = useDispatch();
     } catch (error) {
       console.log(error)
       dispatch(UpdateFailure(error.response?.data?.message || 'Something went wrong'))
+      setError(error.response?.data?.message || 'Something went wrong')
+      setLoading(false)
+    }
+  }
+
+  // Delete Profile
+  const handleDeleteUser = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      const res = await axios.delete(`/api/user/delete/${currentUser._id}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const dat = res.data
+      if (dat.success === false) {
+        dispatch(deleteFailure(dat.message))
+        setError(dat.message)
+        setLoading(false)
+      } else {
+        
+        setSuccess(dat.message)
+        dispatch(deleteUserSuccess())
+        setLoading(false)
+        
+      }
+    } catch (error) {
+      console.log(error)
+      dispatch(deleteFailure(error.response?.data?.message || 'Something went wrong'))
       setError(error.response?.data?.message || 'Something went wrong')
       setLoading(false)
     }
@@ -188,7 +218,7 @@ const dispatch = useDispatch();
       </form>
 
       <div className="flex gap-2 mb-5 my-5 justify-between">
-        <button className="text-red-500 font-black">Delete Account</button>
+        <button className="text-red-500 font-black" onClick={handleDeleteUser}>Delete Account</button>
         <button className="text-red-500 font-black">Sign out</button>
       </div>
       {

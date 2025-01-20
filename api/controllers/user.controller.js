@@ -44,3 +44,23 @@ export const updateUser = async (req, res, next) => {
     next(error); // Pass errors to the error handler
   }
 };
+export const deleteUser = async (req, res, next) => {
+  // Check if the user is updating their own account
+  if (req.user.id !== req.params.id) {
+    return next(errorHandler(401, "You can only delete your own account"));
+  }
+
+  try {
+   
+ await User.findByIdAndDelete(req.params.id);
+
+ 
+
+   
+
+    // Send the response with the updated user details (excluding password)
+    res.status(200).json(successHandler(200, "Profile updated successfully"));
+  } catch (error) {
+    next(error); // Pass errors to the error handler
+  }
+};
