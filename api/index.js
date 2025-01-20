@@ -4,8 +4,14 @@ import dotenv from 'dotenv'
 import userRouter from './routes/user.routes.js';
 import authRouter from './routes/auth.route.js';
 import uploadRouter from './routes/upload.route.js';
+import cookieParser from 'cookie-parser';
+import { authMiddleware } from './middleware/authMiddleware.js';
+
+
+
 
 dotenv.config();
+
 const uri = process.env.MONGOURL;
 
 const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
@@ -29,6 +35,7 @@ console.log('====================================');
   }
   run().catch(console.dir);
 const app = express();
+app.use(cookieParser());
 app.use(express.json())
 app.listen(3000, () => {
     console.log('====================================');
@@ -36,7 +43,7 @@ app.listen(3000, () => {
     console.log('====================================');
 });
 
-app.use('/api/user', userRouter)
+app.use('/api/user',authMiddleware, userRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/upload', uploadRouter)
 
