@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import userRouter from './routes/user.routes.js';
 import authRouter from './routes/auth.route.js';
 import uploadRouter from './routes/upload.route.js';
+import listingRouter from './routes/listing.route.js';
 import cookieParser from 'cookie-parser';
 import { authMiddleware } from './middleware/authMiddleware.js';
 
@@ -46,6 +47,7 @@ app.listen(3000, () => {
 app.use('/api/user',authMiddleware, userRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/upload', uploadRouter)
+app.use('/api/listing',authMiddleware, listingRouter)
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

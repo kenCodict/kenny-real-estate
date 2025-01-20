@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../Components/Loader'
 import ErrorModal from '../Components/ErrorModal'
 import SuccessModal from '../Components/SuccessModal'
-import {updateUserStart,updateUserSuccess ,UpdateFailure, deleteUserSuccess,deleteFailure} from '../redux/features/user/userSlice'
+import {updateUserStart,signOutUserSuccess,signOutFailure,updateUserSuccess ,UpdateFailure, deleteUserSuccess,deleteFailure} from '../redux/features/user/userSlice'
 const Profile = () => {
   const { currentUser } = useSelector(state => state.persistedReducer.user)
   const [data, setData] = useState({
@@ -127,6 +127,35 @@ const dispatch = useDispatch();
       setLoading(false)
     }
   }
+  // Delete Profile
+  const handleSignout = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      const res = await axios.get(`/api/user/signout/${currentUser._id}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const dat = res.data
+      if (dat.success === false) {
+        dispatch(signOutFailure(dat.message))
+        setError(dat.message)
+        setLoading(false)
+      } else {
+        
+        setSuccess(dat.message)
+        dispatch(signOutUserSuccess())
+        setLoading(false)
+        
+      }
+    } catch (error) {
+      console.log(error)
+      dispatch(signOutFailure(error.response?.data?.message || 'Something went wrong'))
+      setError(error.response?.data?.message || 'Something went wrong')
+      setLoading(false)
+    }
+  }
 
   return (
     <section className='max-w-xl mx-auto p-4'>
@@ -219,7 +248,7 @@ const dispatch = useDispatch();
 
       <div className="flex gap-2 mb-5 my-5 justify-between">
         <button className="text-red-500 font-black" onClick={handleDeleteUser}>Delete Account</button>
-        <button className="text-red-500 font-black">Sign out</button>
+        <button className="text-red-500 font-black" onClick={handleSignout}>Sign out</button>
       </div>
       {
   loading && <Loader />

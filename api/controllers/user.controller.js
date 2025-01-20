@@ -64,3 +64,19 @@ res.clearCookie('access_token');
     next(error); // Pass errors to the error handler
   }
 };
+export const signOutUser = async (req, res, next) => {
+  // Check if the user is updating their own account
+  if (req.user.id !== req.params.id) {
+    return next(errorHandler(401, "You can only delete your own account"));
+  }
+
+  try {
+
+   
+res.clearCookie('access_token');
+    // Send the response with the updated user details (excluding password)
+    res.status(200).json(successHandler(200, "logged Out successfully"))
+  } catch (error) {
+    next(error); // Pass errors to the error handler
+  }
+};
