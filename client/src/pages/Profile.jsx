@@ -5,6 +5,8 @@ import Loader from '../Components/Loader'
 import ErrorModal from '../Components/ErrorModal'
 import SuccessModal from '../Components/SuccessModal'
 import {updateUserStart,signOutUserSuccess,signOutFailure,updateUserSuccess ,UpdateFailure, deleteUserSuccess,deleteFailure} from '../redux/features/user/userSlice'
+import {Link} from 'react-router-dom'
+
 const Profile = () => {
   const { currentUser } = useSelector(state => state.persistedReducer.user)
   const [data, setData] = useState({
@@ -245,7 +247,7 @@ const dispatch = useDispatch();
           Update Changes
         </button>
       </form>
-
+      <Link to={'/create-listing'} className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95 w-full block my-3'>Create Listing</Link>
       <div className="flex gap-2 mb-5 my-5 justify-between">
         <button className="text-red-500 font-black" onClick={handleDeleteUser}>Delete Account</button>
         <button className="text-red-500 font-black" onClick={handleSignout}>Sign out</button>

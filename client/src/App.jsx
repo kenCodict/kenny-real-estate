@@ -8,6 +8,7 @@ import Header from "./Components/Header";
 import PrivateRoute from "./Components/PrivateRoute";
 import Upload from "./Components/Upload";
 import SecureUpload from "./Components/SecureUpload";
+import CreateListing from "./pages/CreateListing";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
       <Route element={<PrivateRoute />}>
 
       <Route path="/profile" element={<Profile />} />
+      <Route path="/create-listing" element={<CreateListing />} />
       </Route>
       <Route path="/about" element={<About />} />
      </Routes>
