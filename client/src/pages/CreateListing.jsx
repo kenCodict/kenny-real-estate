@@ -5,25 +5,28 @@ import ErrorModal from '../Components/ErrorModal'
 import SuccessModal from '../Components/SuccessModal'
 import useCloudinaryUpload from '../hooks/useCloudinaryUpload'
 import { FaTrash } from 'react-icons/fa'
-
+import axios from 'axios'
+import { useSelector } from 'react-redux'
+import {useNavigate} from 'react-router-dom'
 const CreateListing = () => {
+  const { currentUser } = useSelector((state) => state.persistedReducer.user);
     const [data, setData] = useState({
-        name:'',
-        description:'',
-        address:'',
-        regularPrice:0,
-        dicountPrice:0,
-        bathrooms:1,
-        bedrooms:1,
-        furnished:false,
-        parking:false,
-        type:'sell',
-        offer:false,
-        imgUrls:[],
-        userRef:'',
-    })
+      name: "",
+      description: "",
+      address: "",
+      regularPrice: 0,
+      dicountPrice: 0,
+      bathrooms: 1,
+      bedrooms: 1,
+      furnished: false,
+      parking: false,
+      type: "rent",
+      offer: false,
+      imgUrls: [],
+      userRef: currentUser._id,
+    });
     const [files, setFiles] = useState([])
-
+const router = useNavigate()
       const [error, setError] = useState('')
     //   const [file, setFile] = useState(undefined)
       const [success, setSuccess] = useState('')
@@ -90,17 +93,40 @@ useEffect(() => {
 
        setUploading(false);
      };
+const submit = async (e) => {
+  e.preventDefault()
+  if (data.imgUrls?.length < 1) {
+    setError("You Must Upload Atleast one Image")
+    return;
+  }
+  if (Number(data.dicountPrice) > Number(data.regularPrice)) {
+    setError("The discount should not be greater than the main price");
+    return;
+  }
+  setLoading(true)
+  setError('')
+  try {
+    const res = await axios.post("/api/listing/createlisting", data);
+    const dats = res.data
+    console.log("=========dats===========================");
+    console.log(dats);
+    console.log("===========dats=========================");
+    setSuccess(dats?.message)
+    setLoading(false)
+    router(`/listing/${dats?.data?._id}`)
+  } catch (error) {
+    setError(error?.message)
+     setLoading(false);
+  }
+}
 
-console.log('====================================');
-console.log(data);
-console.log('====================================');
 
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl text-center font-semibold my-2">
         Create Listing
       </h1>
-      <form className="flex flex-col sm:flex-row gap-6">
+      <form className="flex flex-col sm:flex-row gap-6" onSubmit={submit}>
         <section className="flex flex-col gap-4 flex-1">
           <div className="flex flex-col ">
             <label htmlFor="name">Name</label>

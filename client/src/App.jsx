@@ -9,6 +9,7 @@ import PrivateRoute from "./Components/PrivateRoute";
 import Upload from "./Components/Upload";
 import SecureUpload from "./Components/SecureUpload";
 import CreateListing from "./pages/CreateListing";
+import ViewListing from "./pages/ViewListing";
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
 
       <Route path="/profile" element={<Profile />} />
       <Route path="/create-listing" element={<CreateListing />} />
+      <Route path="/listing/:id" element={<ViewListing />} />
       </Route>
       <Route path="/about" element={<About />} />
      </Routes>
