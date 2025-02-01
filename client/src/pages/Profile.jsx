@@ -132,6 +132,36 @@ const dispatch = useDispatch();
       setLoading(false);
     }
   };
+  const handleListingDelete = async (id) => {
+    // e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await axios.delete(`/api/listing/delete/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const dat = res.data;
+      console.log("====================================");
+      console.log(dat);
+      console.log("====================================");
+      if (dat.success === false) {
+        setError(dat.message);
+        // setError(dat.message);
+        setLoading(false);
+      } else {
+        setSuccess(dat.message);
+        setListings(listings.filter(item => item._id != id))
+      //  await handleShowListing()
+
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setError(error.response?.data?.message || "Something went wrong");
+      setLoading(false);
+    }
+  };
 
   // Delete Profile
   const handleDeleteUser = async (e) => {
@@ -319,7 +349,7 @@ const dispatch = useDispatch();
                     <p className="font-blacktext-slate-700 hover:underline truncate">{item.name}</p>
                   </Link>
                   <div className="">
-                    <button className="text-red-500 mx-5">
+                    <button className="text-red-500 mx-5" onClick={()=> handleListingDelete(item._id)}>
                       <FaTrash />
                     </button>
                     <button className="text-green-500">

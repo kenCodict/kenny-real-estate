@@ -47,7 +47,7 @@ app.listen(3000, () => {
 app.use('/api/user',authMiddleware, userRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/upload', uploadRouter)
-app.use('/api/listing',authMiddleware, listingRouter)
+app.use('/api/listing', listingRouter)
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

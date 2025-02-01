@@ -1,9 +1,16 @@
 import express from 'express'
-import {createListing } from '../controllers/listing.controller.js'
+import {
+  createListing,
+  deleteListing,
+  updateListing,
+} from "../controllers/listing.controller.js";
+import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/createlisting',createListing)
+router.post("/createlisting", authMiddleware, createListing);
+router.patch("/update/:id", authMiddleware, updateListing);
+router.delete('/delete/:id',authMiddleware,deleteListing)
 // router.post('/sign-upload',signUpload)
 // router.post('/google',google)
 
