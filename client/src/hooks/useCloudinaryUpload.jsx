@@ -95,7 +95,9 @@ const useCloudinaryUpload = (cloudName, uploadPreset, type = "auto") => {
       );
     }
   };
-
+console.log("===========imgUrls=========================");
+console.log(imgUrls);
+console.log("=================imgUrls===================");
   return {
     upload: (file) =>
       uploadFile(file, (loaded, total) =>

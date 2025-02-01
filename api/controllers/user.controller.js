@@ -2,6 +2,7 @@ import { errorHandler } from "../utils/error.js";
 import bcryptjs from "bcryptjs";
 import { successHandler } from "../utils/success.js";
 import User from "../models/user.model.js";
+import Listing from "../models/listing.model.js";
 
 export const updateUser = async (req, res, next) => {
   // Check if the user is updating their own account
@@ -78,5 +79,20 @@ res.clearCookie('access_token');
     res.status(200).json(successHandler(200, "logged Out successfully"))
   } catch (error) {
     next(error); // Pass errors to the error handler
+  }
+};
+
+
+export const getUseListings = async (req, res, next) => {
+  try {
+    if (req.user.id !== req.params.id) {
+      return next(errorHandler(401, "You can only view your own listing"))
+    }
+    const listings = await Listing.find({userRef:req.params.id})
+return res
+  .status(200)
+  .json(successHandler(200, "Listing Fetched Successfully", listings));
+  } catch (error) {
+    return next(error)
   }
 };
