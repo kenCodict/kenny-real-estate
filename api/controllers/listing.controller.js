@@ -1,4 +1,5 @@
 import Listing from "../models/listing.model.js"
+import User from "../models/user.model.js"
 import { errorHandler } from "../utils/error.js"
 import { successHandler } from "../utils/success.js"
 
@@ -46,15 +47,18 @@ try {
 export const getSingleListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id);
+    const landlord = await User.findById(listing.userRef)
+   
+   
     if (!listing) {
       return next(errorHandler(404, "Listing Not found"));
     }
    
-   
+    const newListing = { ...listing._doc, landlord: landlord };
 
     return res
       .status(200)
-      .json(successHandler(200, "Listing fetched Successfully", listing));
+      .json(successHandler(200, "Listing fetched Successfully", newListing));
   } catch (error) {
     next(error);
   }

@@ -28,10 +28,11 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/secureupload" element={<SecureUpload />} />
+          <Route path="/listing/:id" element={<ViewListing />} />
           <Route element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/create-listing" element={<CreateListing />} />
-            <Route path="/listing/:id" element={<ViewListing />} />
+
             <Route path="update-listing/:id" element={<UpdateListing />} />
           </Route>
           <Route path="/about" element={<About />} />

@@ -368,7 +368,7 @@ const submit = async (e) => {
               name="image"
               placeholder="image"
               multiple
-              required
+        
               accept="image/*"
               onChange={(e) => setFiles(e.target.files)}
             />
