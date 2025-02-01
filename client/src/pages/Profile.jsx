@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../Components/Loader'
 import ErrorModal from '../Components/ErrorModal'
 import SuccessModal from '../Components/SuccessModal'
-import {updateUserStart,signOutUserSuccess,signOutFailure,updateUserSuccess ,UpdateFailure, deleteUserSuccess,deleteFailure} from '../redux/features/user/userSlice'
+import {signOutUserSuccess,signOutFailure,updateUserSuccess ,UpdateFailure, deleteUserSuccess,deleteFailure} from '../redux/features/user/userSlice'
 import {Link} from 'react-router-dom'
 import { FaEdit, FaTrash } from 'react-icons/fa'
 
@@ -113,9 +113,7 @@ const dispatch = useDispatch();
         }
       );
       const dat = res.data;
-      console.log('====================================');
-      console.log(dat);
-      console.log('====================================');
+     
       if (dat.success === false) {
         setError(dat.message);
         // setError(dat.message);
@@ -346,15 +344,23 @@ const dispatch = useDispatch();
                       alt="listing"
                       className="w-[100px] h-[50px]"
                     />
-                    <p className="font-blacktext-slate-700 hover:underline truncate">{item.name}</p>
+                    <p className="font-blacktext-slate-700 hover:underline truncate">
+                      {item.name}
+                    </p>
                   </Link>
                   <div className="">
-                    <button className="text-red-500 mx-5" onClick={()=> handleListingDelete(item._id)}>
+                    <button
+                      className="text-red-500 mx-5"
+                      onClick={() => handleListingDelete(item._id)}
+                    >
                       <FaTrash />
                     </button>
-                    <button className="text-green-500">
+                    <Link
+                      to={`/update-listing/${item._id}`}
+                      className="text-green-500"
+                    >
                       <FaEdit />
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </article>

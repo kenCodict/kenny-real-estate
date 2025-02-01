@@ -13,6 +13,13 @@ try {
 
 
 }
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 export const deleteListing = async (req, res, next) => {
 try {
     const listing = await Listing.findById(req.params.id);
@@ -28,9 +35,31 @@ try {
 } catch (error) {
     next(error)
 }
-
-
 }
+/**
+ * get Listing
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
+export const getSingleListing = async (req, res, next) => {
+  try {
+    const listing = await Listing.findById(req.params.id);
+    if (!listing) {
+      return next(errorHandler(404, "Listing Not found"));
+    }
+   
+   
+
+    return res
+      .status(200)
+      .json(successHandler(200, "Listing fetched Successfully", listing));
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const updateListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id);

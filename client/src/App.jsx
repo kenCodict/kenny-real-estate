@@ -10,6 +10,7 @@ import Upload from "./Components/Upload";
 import SecureUpload from "./Components/SecureUpload";
 import CreateListing from "./pages/CreateListing";
 import ViewListing from "./pages/ViewListing";
+import UpdateListing from "./pages/UpdateListing";
 
 
 function App() {
@@ -19,25 +20,25 @@ function App() {
 
   return (
     <>
-     <BrowserRouter >
-     <Header />
-     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/upload" element={<Upload />} />
-      <Route path="/secureupload" element={<SecureUpload />} />
-      <Route element={<PrivateRoute />}>
-
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/create-listing" element={<CreateListing />} />
-      <Route path="/listing/:id" element={<ViewListing />} />
-      </Route>
-      <Route path="/about" element={<About />} />
-     </Routes>
-     </BrowserRouter>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/upload" element={<Upload />} />
+          <Route path="/secureupload" element={<SecureUpload />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/create-listing" element={<CreateListing />} />
+            <Route path="/listing/:id" element={<ViewListing />} />
+            <Route path="update-listing/:id" element={<UpdateListing />} />
+          </Route>
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
 export default App
