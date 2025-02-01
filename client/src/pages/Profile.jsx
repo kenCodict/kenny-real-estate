@@ -6,6 +6,7 @@ import ErrorModal from '../Components/ErrorModal'
 import SuccessModal from '../Components/SuccessModal'
 import {updateUserStart,signOutUserSuccess,signOutFailure,updateUserSuccess ,UpdateFailure, deleteUserSuccess,deleteFailure} from '../redux/features/user/userSlice'
 import {Link} from 'react-router-dom'
+import { FaEdit, FaTrash } from 'react-icons/fa'
 
 const Profile = () => {
   const { currentUser } = useSelector(state => state.persistedReducer.user)
@@ -22,7 +23,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState(0) // For tracking upload progress
   const [uploading, setUploading] = useState(false) // To manage upload state
-
+const [listings, setListings] = useState([])
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value })
   }
@@ -99,6 +100,38 @@ const dispatch = useDispatch();
       setLoading(false)
     }
   }
+  const handleShowListing = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `/api/user/listings/${currentUser._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const dat = res.data;
+      console.log('====================================');
+      console.log(dat);
+      console.log('====================================');
+      if (dat.success === false) {
+        setError(dat.message);
+        // setError(dat.message);
+        setLoading(false);
+      } else {
+        setSuccess(dat.message);
+        setListings(dat.data);
+       
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setError(error.response?.data?.message || "Something went wrong");
+      setLoading(false);
+    }
+  };
 
   // Delete Profile
   const handleDeleteUser = async (e) => {
@@ -160,7 +193,7 @@ const dispatch = useDispatch();
   }
 
   return (
-    <section className='max-w-xl mx-auto p-4'>
+    <section className="max-w-xl mx-auto p-4">
       <h1 className="font-black text-center text-3xl">Profile</h1>
       <form className="flex flex-col gap-5" onSubmit={submit}>
         <label htmlFor="file">
@@ -168,9 +201,9 @@ const dispatch = useDispatch();
             type="file"
             name="file"
             id="file"
-            className='hidden'
+            className="hidden"
             onChange={handleImageChange}
-            accept='image/*'
+            accept="image/*"
           />
           <img
             src={data.avatar || currentUser.avatar}
@@ -194,11 +227,13 @@ const dispatch = useDispatch();
             <div className="w-full bg-gray-200 h-2 rounded-full">
               <div
                 className="bg-blue-600 h-2 rounded-full"
-                style={{ width: `${progress}%`, transition: 'width 0.3s ease' }}
+                style={{ width: `${progress}%`, transition: "width 0.3s ease" }}
               ></div>
             </div>
             <div className="absolute inset-0 flex justify-center items-center">
-              <span className="text-white text-xs font-semibold">{progress}%</span>
+              <span className="text-white text-xs font-semibold">
+                {progress}%
+              </span>
             </div>
           </div>
         )}
@@ -208,7 +243,7 @@ const dispatch = useDispatch();
           className="border rounded-lg p-3"
           id="name"
           value={data.name}
-          name='name'
+          name="name"
           onChange={handleChange}
           placeholder="Full Name"
         />
@@ -217,7 +252,7 @@ const dispatch = useDispatch();
           className="border rounded-lg p-3"
           id="email"
           value={data.email}
-          name='email'
+          name="email"
           onChange={handleChange}
           placeholder="Email Address"
         />
@@ -226,7 +261,7 @@ const dispatch = useDispatch();
           className="border rounded-lg p-3"
           id="username"
           value={data.username}
-          name='username'
+          name="username"
           onChange={handleChange}
           placeholder="Username"
         />
@@ -235,7 +270,7 @@ const dispatch = useDispatch();
           className="border rounded-lg p-3"
           id="password"
           value={data.password}
-          name='password'
+          name="password"
           onChange={handleChange}
           placeholder="Password"
         />
@@ -247,23 +282,63 @@ const dispatch = useDispatch();
           Update Changes
         </button>
       </form>
-      <Link to={'/create-listing'} className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95 w-full block my-3'>Create Listing</Link>
+      <Link
+        to={"/create-listing"}
+        className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95 w-full block my-3"
+      >
+        Create Listing
+      </Link>
       <div className="flex gap-2 mb-5 my-5 justify-between">
-        <button className="text-red-500 font-black" onClick={handleDeleteUser}>Delete Account</button>
-        <button className="text-red-500 font-black" onClick={handleSignout}>Sign out</button>
+        <button className="text-red-500 font-black" onClick={handleDeleteUser}>
+          Delete Account
+        </button>
+        <button className="text-red-500 font-black" onClick={handleSignout}>
+          Sign out
+        </button>
       </div>
-      {
-  loading && <Loader />
-}
+      <button
+        className="text-green-500 font-bold text-center flex items-center justify-end w-fit mx-aut"
+        onClick={handleShowListing}
+      >
+        Show Listing
+      </button>
 
-{
-  error && <ErrorModal setError={setError} error={error} />
-}
-{
-  success && <SuccessModal setSuccess={setSuccess} success={success} />
-}
+      {listings && listings.length > 0 && (
+        <section className="">
+          <h1 className="font-black text-xl text-center my-5">Your Listings</h1>
+          {listings.map((item) => {
+            return (
+              <article className=" mt-5 border-b-2 pb-4" key={item._id}>
+                <div className="flex justify-between items-center gap-4 flex-wrap">
+                  <Link to={`/listing/${item._id}`} className=" flex gap-2">
+                    <img
+                      src={item.imgUrls[0]?.url}
+                      alt="listing"
+                      className="w-[100px] h-[50px]"
+                    />
+                    <p className="font-blacktext-slate-700 hover:underline truncate">{item.name}</p>
+                  </Link>
+                  <div className="">
+                    <button className="text-red-500 mx-5">
+                      <FaTrash />
+                    </button>
+                    <button className="text-green-500">
+                      <FaEdit />
+                    </button>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      )}
+
+      {loading && <Loader />}
+
+      {error && <ErrorModal setError={setError} error={error} />}
+      {success && <SuccessModal setSuccess={setSuccess} success={success} />}
     </section>
-  )
+  );
 }
 
 export default Profile
