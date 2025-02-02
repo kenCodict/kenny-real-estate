@@ -5,11 +5,22 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   server: {
     proxy: {
-      '/api': {
+      "/api": {
         target: "http://localhost:3000",
-        secure:false,
+        secure: false,
       },
-    }
+    },
+  },
+  build: {
+    target: "esnext",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"], // example of splitting vendor code
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000, // Increase the limit if preferred
   },
   plugins: [react()],
-})
+});
