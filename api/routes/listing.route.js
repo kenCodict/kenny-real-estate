@@ -4,6 +4,7 @@ import {
   deleteListing,
   updateListing,
   getSingleListing,
+  getListings,
 } from "../controllers/listing.controller.js";
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
@@ -13,6 +14,7 @@ router.post("/createlisting", authMiddleware, createListing);
 router.patch("/update/:id", authMiddleware, updateListing);
 router.delete('/delete/:id',authMiddleware,deleteListing)
 router.get('/listing/:id',getSingleListing)
+router.get('/',getListings)
 // router.post('/sign-upload',signUpload)
 // router.post('/google',google)
 

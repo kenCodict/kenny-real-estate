@@ -75,8 +75,8 @@ const hadleContactMessage = () => {};
                 return (
                   <SwiperSlide key={item.url}>
                     <div
-                      className="h-[500px] bg-center bg-no-repeat bg-cover"
-                      style={{ background: `url(${item.url})` }}
+                      className="h-[500px] bg-center "
+                      style={{ background: `url(${item.url})`, backgroundRepeat:'no-repeat', backgroundPosition:'center', backgroundSize:'cover', backgroundAttachment:"fixed" }}
                     >
                       {/* <img src={item.url} alt="" className="" /> */}
                     </div>
