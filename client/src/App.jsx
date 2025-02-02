@@ -11,6 +11,7 @@ import SecureUpload from "./Components/SecureUpload";
 import CreateListing from "./pages/CreateListing";
 import ViewListing from "./pages/ViewListing";
 import UpdateListing from "./pages/UpdateListing";
+import Search from "./pages/Search";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/secureupload" element={<SecureUpload />} />
+          <Route path="/search" element={<Search />} />
           <Route path="/listing/:id" element={<ViewListing />} />
           <Route element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />

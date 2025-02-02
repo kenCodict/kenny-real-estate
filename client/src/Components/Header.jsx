@@ -16,7 +16,7 @@ navigate(`/search?${searchQuery}`)
 
 useEffect(() => {
   const urlParams = new URLSearchParams(location.search);
-  const searching = urlParams.get('searchTerm')
+  const searching = urlParams.get("searchTerm");
   if (searching) {
     setSearchTem(searching);
   }
@@ -33,6 +33,7 @@ useEffect(() => {
         <form className="bg-slate-100 p-3 rounded-lg flex justify-between items-center" onSubmit={handleSubmit}>
           <input
             type="text"
+            value={searchTerm}
             className="bg-transparent focus:outline-none w-24 sm:w-64"
             placeholder="Search..."
             onChange={(e) => setSearchTem(e.target.value)}
