@@ -20,7 +20,7 @@ const ViewListing = () => {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const [showContactFor, setShowContactForm] = useState(false);
-  
+
   //const [progress, setProgress] = useState(0) // For tracking upload progress
   const [uploading, setUploading] = useState(false); // To manage upload state
   const [listing, setListing] = useState(null); // To manage upload state
@@ -108,7 +108,7 @@ const hadleContactMessage = () => {};
                   $
                   {(
                     +listing.regularPrice - +listing.dicountPrice
-                  ).toLocaleString()}
+                  ).toLocaleString()} off
                 </p>
               )}
             </div>

@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom'
+import Loader from "../Components/Loader";
+import ErrorModal from "../Components/ErrorModal";
+import ListingCard from "../Components/ListingCard";
 const Search = () => {
 const [data, setData] = useState({
     type:'all',
@@ -13,7 +16,7 @@ const [data, setData] = useState({
 })
 const navigate = useNavigate()
     const [error, setError] = useState("");
-    const [listings, setListing] = useState("");
+    const [listings, setListing] = useState([]);
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -67,7 +70,7 @@ useEffect(() => {
   }
   const searchQuery = urlParams.toString();
   fetchListings(searchQuery);
-},[])
+},[location.search])
 
 const fetchListings = async (searchQuery) => {
   setLoading(true);
@@ -98,6 +101,9 @@ const fetchListings = async (searchQuery) => {
     setLoading(false);
   }
 };
+console.log("===========listings=========================");
+console.log(listings);
+console.log("==============listings======================");
   return (
     <main className="flex flex-wrap gap-5 min-h-screen ">
       <section className="border-b border-b-gray-200 md:border-b-0 md:border-r  md:border-r-gray-200 p-4 min-w-[200px] ">
@@ -224,13 +230,30 @@ const fetchListings = async (searchQuery) => {
         </form>
       </section>
 
-      <section className="">
+      <section className="flex-1">
         <h1 className="font-black text-3xl p-3 border-b text-slate-700">
           Listing Results:
         </h1>
-
-        
+        <div className="">
+            {
+                 !loading &&  listings && listings.length == 0 && (
+                    <p className="text-xl text-slate-700">No Listing Found!!!</p>
+                  )
+            }
+            {
+                listings && listings.length > 0 && (
+                    <article className="flex gap-4 flex-wrap p-4">
+                        {
+                            listings.map(item => <ListingCard listing={item} key={item._id} />)
+                        }
+                    </article>
+                )
+            }
+        </div>
       </section>
+      {loading && <Loader />}
+
+      {error && <ErrorModal setError={setError} error={error} />}
     </main>
   );
 }

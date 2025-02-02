@@ -383,9 +383,7 @@ const submit = async (e) => {
           </button>
         </section>
       </form>
-      {(loading || uploadLoading) && <Loader />}
 
-      {error && <ErrorModal setError={setError} error={error} />}
       {success && <SuccessModal setSuccess={setSuccess} success={success} />}
     </main>
   );
