@@ -1,31 +1,47 @@
-import jwt from 'jsonwebtoken';  // For JWT verification (if you're using JWT)
+import jwt from 'jsonwebtoken';  // For JWT verification
 import cookieParser from 'cookie-parser';  // To read cookies from request
 import { errorHandler } from '../utils/error.js';
+import User from '../models/user.model.js'; // Import User model
 
-// Your secret key (make sure to store this securely in environment variables)
+export const authMiddleware = async (req, res, next) => {
+    try {
+        let token;
 
+        // First, check for the session cookie (access_token)
+        if (req.cookies && req.cookies.access_token) {
+            token = req.cookies.access_token;
+        }
+        
+        // If no session cookie is found, check for Bearer token in Authorization header
+        if (!token && req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+            token = req.headers.authorization.split(" ")[1];
+        }
 
-// Express middleware for authentication
-export const authMiddleware = (req, res, next) => {
-  // Get the token from the cookies (assuming the cookie is named 'token')
-  const token = req.cookies.access_token;
+        // If no token is found in both methods, return an Unauthorized error
+        if (!token) {
+            return res.status(401).json(errorHandler(401, "Unauthorized. No authentication provided."));
+        }
 
-  // If no token is found, send an Unauthorized error
-  if (!token) {
-    return res.status(401).json(errorHandler(401, 'Unauthorized'));
-  }
- 
-  // Verify the token (decode it)
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      // If there's an error (e.g., token is expired or invalid), send an Unauthorized error
-      return res.status(403).json(errorHandler(403, 'Forbidden. Invalid or expired token.'));
+        // Verify the token
+        jwt.verify(token, 'kennybestinternational@qw231123', async (err, decoded) => {
+            if (err) {
+                return res.status(403).json(errorHandler(403, "Forbidden. Invalid or expired token."));
+            }
+
+            // Find the user in the database and ensure the token matches
+            const user = await User.findById(decoded.id);
+            if (!user || user.token !== token) {
+                return res.status(401).json(errorHandler(401, "Unauthorized. Token mismatch or user not found."));
+            }
+
+            // Attach user data to the request object for further use
+            req.user = user;
+
+            // Continue to the next middleware or route handler
+            next();
+        });
+
+    } catch (error) {
+        return res.status(401).json(errorHandler(401, "Authentication failed."));
     }
-
-    // If token is valid, attach the decoded user data (e.g., user id) to the request object
-    req.user = decoded; // assuming the token contains user data like { id, email, username, etc. }
-
-    // Continue to the next middleware or route handler
-    next();
-  });
 };

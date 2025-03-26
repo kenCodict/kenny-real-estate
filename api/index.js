@@ -13,7 +13,7 @@ import path from 'path'
 
 dotenv.config();
 
-const uri = process.env.MONGOURL;
+const uri = `mongodb+srv://ogbobeebubechukwu:OGzcmaF6RtgQPLHb@cluster0.vutj9.mongodb.net/kenny-estate?retryWrites=true&w=majority&appName=Cluster0`;
 
 const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
 

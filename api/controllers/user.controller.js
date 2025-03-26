@@ -66,19 +66,22 @@ res.clearCookie('access_token');
   }
 };
 export const signOutUser = async (req, res, next) => {
-  // Check if the user is updating their own account
-  if (req.user.id !== req.params.id) {
-    return next(errorHandler(401, "You can only delete your own account"));
-  }
-
   try {
+    // Ensure the user is signing out their own account
+    if (req.user.id !== req.params.id) {
+      return next(errorHandler(401, "You can only log out from your own account."));
+    }
 
-   
-res.clearCookie('access_token');
-    // Send the response with the updated user details (excluding password)
-    res.status(200).json(successHandler(200, "logged Out successfully"))
+    // Find the user and remove the stored token from the database
+    await User.findByIdAndUpdate(req.user.id, { token: null });
+
+    // Clear the session cookie
+    res.clearCookie("access_token", { httpOnly: true, secure: true });
+
+    // Send response
+    res.status(200).json(successHandler(200, "Logged out successfully"));
   } catch (error) {
-    next(error); // Pass errors to the error handler
+    next(error);
   }
 };
 
