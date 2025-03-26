@@ -7,8 +7,12 @@ import uploadRouter from './routes/upload.route.js';
 import listingRouter from './routes/listing.route.js';
 import cookieParser from 'cookie-parser';
 import { authMiddleware } from './middleware/authMiddleware.js';
+import cors from 'cors';
 
 import path from 'path'
+
+
+
 
 
 dotenv.config();
@@ -39,6 +43,12 @@ console.log('====================================');
   const __dirname = path.resolve();
 
 const app = express();
+// Enable CORS for all domains
+app.use(cors({
+  origin: '*', // Allow requests from any domain
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(cookieParser());
 app.use(express.json())
 app.listen(3000, () => {

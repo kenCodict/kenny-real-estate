@@ -21,33 +21,43 @@ try {
 export const signin = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-        const validUser = await User.findOne({ email });
 
+        // Find user by email
+        const validUser = await User.findOne({ email });
         if (!validUser) {
             return next(errorHandler(404, "User does not match our record"));
         }
 
+        // Validate password
         const validPassword = bcryptjs.compareSync(password, validUser.password);
         if (!validPassword) {
             return next(errorHandler(401, "Wrong Credentials"));
         }
 
-        // Generate a new JWT token
-        const token = jwt.sign({ id: validUser._id }, 'kennybestinternational@qw231123', { expiresIn: '7d' });
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: validUser._id },
+            process.env.JWT_SECRET,  // Ensure you store this securely
+            { expiresIn: '7d' }
+        );
 
-        // Store token in the database
+        // Store token in database for tracking
         validUser.token = token;
         await validUser.save();
 
+        // Destructure response data (excluding password)
         const { password: pass, token: storedToken, ...rest } = validUser._doc;
 
-        res.cookie('access_token', token, { httpOnly: true })
-            .status(200)
-            .json(successHandler(200, "Logged in successfully", { user: rest, token: storedToken }));
+        // Send token in JSON response
+        res.status(200).json({
+            success: true,
+            message: "Logged in successfully",
+            user: rest,
+            token: storedToken, // The token is returned here
+        });
+
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+        console.log(error);
         next(error);
     }
 };
