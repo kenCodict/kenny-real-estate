@@ -31,7 +31,7 @@ export const authMiddleware = async (req, res, next) => {
             // Find the user in the database and ensure the token matches
             const user = await User.findById(decoded.id);
             if (!user || user.token !== token) {
-                return res.status(401).json(errorHandler(401, "Unauthorized. Token mismatch or user not found."));
+                return res.status(401).json(errorHandler(401, `Unauthorized. Token mismatch or user not found.${token}`));
             }
 
             // Attach user data to the request object for further use
