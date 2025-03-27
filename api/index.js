@@ -45,10 +45,12 @@ console.log('====================================');
 const app = express();
 // Enable CORS for all domains
 app.use(cors({
-  origin: '*', // Allow requests from any domain
+  origin: ['http://localhost:5174', 'http://localhost:8000'], // Allow multiple origins
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Allow cookies, authorization headers, and sessions
 }));
+
 app.use(cookieParser());
 app.use(express.json())
 app.listen(3000, () => {
